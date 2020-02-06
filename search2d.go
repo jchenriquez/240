@@ -1,40 +1,48 @@
 package search2d
 
-func SearchMatrix(matrix [][]int, target int) bool {
-	if len(matrix) == 1 && len(matrix[0]) == 1 {
-		return matrix[0][0] == target
-	}
+func search2D (matrix [][]int, target, rowStart, rowEnd, columnStart, columnEnd int) bool {
+  if rowEnd - rowStart == 0 && columnEnd - columnStart == 0 {
+    return matrix[rowStart][columnStart] == target
+  }
 
-	columnMid := len(matrix[0]) / 2
-	rowMid := len(matrix) / 2
+  columnMid := (columnEnd+columnStart) / 2
+	rowMid := (rowEnd+rowStart) / 2
 
 	var newColumnStart int
 	var newColumnEnd int
 	var newRowStart int
 	var newRowEnd int
 
-	if matrix[0][columnMid] == target {
+	if matrix[rowStart][columnMid] == target {
 		return true
 	}
 
-	if matrix[rowMid][0] == target {
+	if matrix[rowMid][columnStart] == target {
 		return true
 	}
 
-	if target > matrix[0][columnMid] {
+	if target > matrix[rowStart][columnMid] {
 		newColumnStart = columnMid
-		newColumnEnd = len(matrix[0])
+		newColumnEnd = columnEnd
 	} else {
-		newColumnStart = 0
+		newColumnStart = columnStart
 		newColumnEnd = columnMid
 	}
 
 	if target > matrix[columnMid][rowMid] {
 		newRowStart = rowMid
-		newColumnEnd = len(matrix)
+		newColumnEnd = rowEnd
 	} else {
-		newRowStart = 0
+		newRowStart = rowStart
 		newRowEnd = rowMid
 	}
 
+  return search2D(matrix, target, newRowStart, newRowEnd, newColumnStart, newColumnEnd)
+}
+
+func SearchMatrix(matrix [][]int, target int) bool {
+  if len(matrix) == 0{
+    return false
+  }
+  return search2D(matrix, target, 0, len(matrix), 0, len(matrix[0]))
 }
